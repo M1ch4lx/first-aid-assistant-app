@@ -1,22 +1,15 @@
 class BotAction {
-  final String actionId;
   final String? message;
   final String? display;
+  final bool special;
 
-  BotAction({required this.actionId, this.message, this.display});
+  BotAction({this.message, this.display, this.special = false});
 
-  factory BotAction.fromYaml(String id, Map map) {
+  factory BotAction.fromJson(Map<String, dynamic> json) {
     return BotAction(
-      actionId: id,
-      message: map['message'],
-      display: map['display'],
+      message: json['message'] as String?,
+      display: json['display'] as String?,
+      special: json['special'] is bool ? json['special'] : false,
     );
   }
-}
-
-class BotRule {
-  final String name;
-  final List<Map<String, String>> steps;
-
-  BotRule({required this.name, required this.steps});
 }
