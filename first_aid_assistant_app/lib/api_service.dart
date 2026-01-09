@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ApiService {
-  final String wsUrl = "ws://192.168.68.191:8000/ws"; 
+  final String wsUrl = "ws://10.63.151.246:8000/ws"; 
   WebSocketChannel? _channel;
 
-  // Stream, który będzie udostępniał dane w UI
   Stream<dynamic> get messages => _channel?.stream ?? const Stream.empty();
 
   void connect() {
@@ -14,7 +12,7 @@ class ApiService {
 
   void sendMessage(String text) {
     if (_channel != null) {
-      _channel!.sink.add(text); // Backend oczekuje czystego Stringa
+      _channel!.sink.add(text);
     }
   }
 

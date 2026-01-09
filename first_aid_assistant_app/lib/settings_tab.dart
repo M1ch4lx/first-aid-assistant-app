@@ -8,7 +8,7 @@ class SettingsTab extends StatefulWidget {
 }
 
 class _SettingsTabState extends State<SettingsTab> {
-  String _selectedVoice = 'Żeński'; // Domyślna wartość
+  String _selectedVoice = 'Żeński';
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,6 @@ class _SettingsTabState extends State<SettingsTab> {
             ),
           ),
 
-          // SEKCJA: Głos i Dźwięk
           _buildStickyHeader('Głos i Dźwięk', Icons.volume_up),
           SliverList(
             delegate: SliverChildListDelegate([
@@ -65,7 +64,6 @@ class _SettingsTabState extends State<SettingsTab> {
             ]),
           ),
 
-          // SEKCJA: Ogólne
           _buildStickyHeader('Ogólne', Icons.settings),
           SliverList(
             delegate: SliverChildListDelegate([
@@ -82,7 +80,6 @@ class _SettingsTabState extends State<SettingsTab> {
             ]),
           ),
 
-          // STOPKA
           SliverFillRemaining(
             hasScrollBody: false,
             child: Padding(
@@ -107,7 +104,6 @@ class _SettingsTabState extends State<SettingsTab> {
     );
   }
 
-  // Buduje nagłówek, który "przykleja się" do góry
   Widget _buildStickyHeader(String title, IconData icon) {
     return SliverPersistentHeader(
       pinned: true,

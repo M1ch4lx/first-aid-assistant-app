@@ -36,7 +36,6 @@ class ProcedureDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // SEKCJA OSTRZEŻEŃ (Pomarańczowy)
             _buildInfoBox(
               title: 'WAŻNE OSTRZEŻENIA',
               icon: Icons.warning_amber_rounded,
@@ -52,7 +51,6 @@ class ProcedureDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
 
-            // LISTA KROKÓW
             const Text(
               'INSTRUKCJA KROK PO KROKU',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 1.2),
@@ -65,7 +63,6 @@ class ProcedureDetailScreen extends StatelessWidget {
 
             // --- NOWE SEKCJE NA DOLE ---
 
-            // SEKREJA POGOTOWIE (Czerwonawy)
             _buildInfoBox(
               title: 'POGOTOWIE RATUNKOWE',
               icon: Icons.phone_in_talk,
@@ -79,7 +76,6 @@ class ProcedureDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // SEKCJA O PROCEDURZE (Szarawy)
             _buildInfoBox(
               title: 'O TEJ PROCEDURZE',
               icon: Icons.info_outline,
@@ -91,14 +87,13 @@ class ProcedureDetailScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.grey.shade800),
               ),
             ),
-            const SizedBox(height: 40), // Margines na samym dole
+            const SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
-
-  // Uniwersalny widget dla kolorowych bloków informacyjnych
+  
   Widget _buildInfoBox({
     required String title,
     required IconData icon,
