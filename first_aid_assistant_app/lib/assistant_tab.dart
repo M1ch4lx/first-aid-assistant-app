@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:vibration/vibration.dart';
+import 'package:audioplayers/audioplayers.dart'; // DODANO
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'api_service.dart';
 import './models/flow_models.dart';
@@ -20,6 +20,7 @@ class AssistantTab extends StatefulWidget {
 class _AssistantTabState extends State<AssistantTab> {
   final ApiService _apiService = ApiService();
   final FlutterTts _flutterTts = FlutterTts();
+  final AudioPlayer _audioPlayer = AudioPlayer(); // DODANO: Instancja odtwarzacza
   StreamSubscription? _subscription;
 
   // --- SPEECH TO TEXT (STT) ---
@@ -38,7 +39,7 @@ class _AssistantTabState extends State<AssistantTab> {
   Completer<void>? _ttsCompleter;
 
   // --- LOGIKA POWTARZANIA (REPEAT) ---
-  String _lastSpokenText = ""; // Tu przechowujemy ostatnie wypowiedziane zdanie
+  String _lastSpokenText = ""; 
 
   // --- METRONOM RKO ---
   Timer? _metronomeTimer;
@@ -62,20 +63,22 @@ class _AssistantTabState extends State<AssistantTab> {
     _initWebSocket();
     await _fetchInitialLocation();
     await _initSTT();
+    // Opcjonalne: Wstępne załadowanie źródła dźwięku dla lepszej wydajności
+    await _audioPlayer.setSource(AssetSource('sounds/metronome.mp3'));
   }
+
+  // ... (Metody _initSTT, _startContinuousListening, _initTTS, _initWebSocket, _runActionWorker pozostają bez zmian)
 
   Future<void> _initSTT() async {
     try {
       bool available = await _speechToText.initialize(
         onStatus: (status) {
-          debugPrint('[STT STATUS] $status');
           if (status == 'notListening' || status == 'done') {
             if (!_isBotSpeaking) _startContinuousListening();
           }
           if (mounted) setState(() => _isListening = _speechToText.isListening);
         },
         onError: (error) {
-          debugPrint('[STT ERROR] $error');
           if (error.errorMsg != 'error_busy' && !_isBotSpeaking) _startContinuousListening();
         },
       );
@@ -141,62 +144,45 @@ class _AssistantTabState extends State<AssistantTab> {
     try {
       if (mounted) {
         setState(() {
-          // Główne wiadomości tekstowe (nie-specjalne) zapisujemy jako ostatnio mówione
           if (action.message != null && action.message!.isNotEmpty && action.special != true) {
             _botResponse = action.message!;
-            _lastSpokenText = action.message!; // Zapamiętaj tekst do powtórzenia
+            _lastSpokenText = action.message!;
           }
           _extraDisplay = action.display ?? "";
         });
       }
 
-      // AKCJA: MOWA ASYSTENTA
       if (action.message != null && action.message!.isNotEmpty && action.special != true) {
         await _speakText(action.message!);
       }
 
-      // AKCJE SPECJALNE
       if (action.special == true) {
         switch (action.message) {
-          case 'tell_location': 
-            await _handleTellLocation(); 
-            break;
-          case 'repeat': // NOWA OBSŁUGA AKCJI REPEAT
-            await _handleRepeat();
-            break;
-          case 'start_cpr_pacer': 
-            _startMetronome(); 
-            break;
-          case 'call_emergency_number': 
-            _handleCallEmergency(); 
-            break;
+          case 'tell_location': await _handleTellLocation(); break;
+          case 'repeat': await _handleRepeat(); break;
+          case 'start_cpr_pacer': _startMetronome(); break;
+          case 'call_emergency_number': _handleCallEmergency(); break;
         }
       }
     } catch (e) { debugPrint("[EXEC ERROR] $e"); }
     await Future.delayed(const Duration(milliseconds: 400));
   }
 
-  // Pomocnicza metoda do mówienia tekstu z zarządzaniem STT
   Future<void> _speakText(String text) async {
     _isBotSpeaking = true;
     await _speechToText.stop();
-    
     _ttsCompleter = Completer<void>();
     await _flutterTts.speak(text);
-    
     await _ttsCompleter!.future.timeout(
       const Duration(seconds: 20),
       onTimeout: () { if (_ttsCompleter != null && !_ttsCompleter!.isCompleted) _ttsCompleter!.complete(); },
     );
-
     _isBotSpeaking = false;
     _startContinuousListening();
   }
 
-  // --- LOGIKA POWTARZANIA ---
   Future<void> _handleRepeat() async {
     if (_lastSpokenText.isNotEmpty) {
-      debugPrint("[REPEAT] Powtarzam: $_lastSpokenText");
       if (mounted) setState(() => _botResponse = _lastSpokenText);
       await _speakText(_lastSpokenText);
     } else {
@@ -206,23 +192,13 @@ class _AssistantTabState extends State<AssistantTab> {
 
   Future<void> _handleTellLocation() async {
     String resp = "Twoja lokalizacja to: $_cachedAddress";
-    
-    if (mounted) {
-      setState(() {
-        _botResponse = resp;
-        _lastSpokenText = resp;
-      });
-    }
-
+    if (mounted) setState(() { _botResponse = resp; _lastSpokenText = resp; });
     await _speakText(resp);
   }
 
   void _handleRecognizedText(String text) {
     if (text.isEmpty) return;
-    setState(() {
-      _isLoading = true;
-      _recognizedWords = ""; 
-    });
+    setState(() { _isLoading = true; _recognizedWords = ""; });
     _apiService.sendMessage(text);
   }
 
@@ -243,6 +219,8 @@ class _AssistantTabState extends State<AssistantTab> {
     } catch (e) { if (mounted) setState(() => _cachedAddress = "Brak GPS"); }
   }
 
+  // --- ZMODYFIKOWANA LOGIKA METRONOMU ---
+
   void _startMetronome() {
     if (_isMetronomeActive) return;
     _isMetronomeActive = true;
@@ -252,16 +230,27 @@ class _AssistantTabState extends State<AssistantTab> {
 
   void _runCompressionCycle() {
     if (!_isMetronomeActive) return;
+    
+    // RKO: ~110 uciśnięć na minutę = ok. 545ms na uciśnięcie
     _metronomeTimer = Timer.periodic(const Duration(milliseconds: 545), (timer) async {
       if (_compressionCount < 30) {
         _compressionCount++;
         if (mounted) setState(() => _metronomeCountText = "UCIŚNIĘCIE: $_compressionCount");
-        if (!kIsWeb && (await Vibration.hasVibrator() ?? false)) Vibration.vibrate(duration: 80);
+        
+        // ODTWARZANIE DŹWIĘKU ZAMIAST WIBRACJI
+        // Używamy stop() i resume/play, aby dźwięk mógł być odtwarzany szybko raz za razem
+        await _audioPlayer.stop(); 
+        await _audioPlayer.play(AssetSource('sounds/metronome.mp3'), mode: PlayerMode.lowLatency);
+        
       } else {
         timer.cancel();
         _compressionCount = 0;
         if (mounted) setState(() => _metronomeCountText = "PRZERWA: 2 WDECHY");
-        Future.delayed(const Duration(seconds: 5), () { if (_isMetronomeActive) _runCompressionCycle(); });
+        
+        // Przerwa na oddechy (ok. 5 sekund), po czym powrót do cyklu
+        Future.delayed(const Duration(seconds: 5), () { 
+          if (_isMetronomeActive) _runCompressionCycle(); 
+        });
       }
     });
   }
@@ -278,9 +267,12 @@ class _AssistantTabState extends State<AssistantTab> {
     _subscription?.cancel();
     _speechToText.stop();
     _flutterTts.stop();
+    _audioPlayer.dispose(); // DODANO: Zwolnienie zasobów odtwarzacza
     _apiService.disconnect();
     super.dispose();
   }
+
+  // ... (Metoda build i widgety pomocnicze pozostają bez zmian)
 
   @override
   Widget build(BuildContext context) {

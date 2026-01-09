@@ -13,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // Lista widoków dla każdej zakładki
   static const List<Widget> _widgetOptions = <Widget>[
     AssistantTab(),
     CatalogTab(),

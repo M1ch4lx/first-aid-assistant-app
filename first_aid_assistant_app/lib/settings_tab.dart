@@ -8,15 +8,12 @@ class SettingsTab extends StatefulWidget {
 }
 
 class _SettingsTabState extends State<SettingsTab> {
-  String _selectedVoice = 'Żeński';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       body: CustomScrollView(
         slivers: [
-          // Nagłówek główny
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 40, 20, 10),
@@ -37,45 +34,22 @@ class _SettingsTabState extends State<SettingsTab> {
             ),
           ),
 
-          _buildStickyHeader('Głos i Dźwięk', Icons.volume_up),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              _buildSettingTile(
-                title: 'Typ głosu',
-                subtitle: _selectedVoice,
-                icon: Icons.record_voice_over,
-                trailing: DropdownButton<String>(
-                  value: _selectedVoice,
-                  underline: const SizedBox(), // Usuwa dolną linię
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedVoice = newValue!;
-                    });
-                  },
-                  items: <String>['Żeński', 'Męski']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ]),
-          ),
-
           _buildStickyHeader('Ogólne', Icons.settings),
           SliverList(
             delegate: SliverChildListDelegate([
               _buildSettingTile(
                 title: 'Polityka i prywatność',
                 icon: Icons.privacy_tip_outlined,
-                onTap: () {},
+                onTap: () {
+                  // Here can be added link to privacy policy website
+                },
               ),
               _buildSettingTile(
                 title: 'Pomoc i Wsparcie',
                 icon: Icons.help_outline,
-                onTap: () {},
+                onTap: () {
+                  // Here can be added link to help and support website
+                },
               ),
             ]),
           ),
@@ -114,7 +88,6 @@ class _SettingsTabState extends State<SettingsTab> {
     );
   }
 
-  // Buduje pojedynczy wiersz ustawień
   Widget _buildSettingTile({
     required String title,
     String? subtitle,
@@ -128,14 +101,13 @@ class _SettingsTabState extends State<SettingsTab> {
         leading: Icon(icon, color: Colors.red.shade900),
         title: Text(title),
         subtitle: subtitle != null ? Text(subtitle) : null,
-        trailing: trailing ?? const Icon(Icons.chevron_right, size: 20),
+        trailing: trailing ?? const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
         onTap: onTap,
       ),
     );
   }
 }
 
-// Klasa pomocnicza do obsługi Sticky Header
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String title;
   final IconData icon;
