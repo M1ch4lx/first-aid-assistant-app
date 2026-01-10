@@ -1,6 +1,6 @@
 # Aplikacja asystenta pierwszej pomocy
 
-## Instalacja
+## Wymagania
 
 Aplikacja została zaimplementowana z użyciem wieloplatformowego frameworka Flutter.
 
