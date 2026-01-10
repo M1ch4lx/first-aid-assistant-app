@@ -1,7 +1,9 @@
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
-  final String wsUrl = "ws://10.63.151.246:8000/ws"; 
+  final String wsUrl = dotenv.get('WS_URL', fallback: 'ws://localhost:8000/ws');
+
   WebSocketChannel? _channel;
 
   Stream<dynamic> get messages => _channel?.stream ?? const Stream.empty();

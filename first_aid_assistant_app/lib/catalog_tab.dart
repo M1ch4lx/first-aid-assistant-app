@@ -116,7 +116,6 @@ class _CatalogTabState extends State<CatalogTab> {
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
                   const SizedBox(height: 20),
                   
-                  // DZIAŁAJĄCA WYSZUKIWARKA
                   TextField(
                     controller: _searchController,
                     onChanged: _filterProcedures,

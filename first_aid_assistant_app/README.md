@@ -1,16 +1,27 @@
-# first_aid_assistant_app
+# Aplikacja asystenta pierwszej pomocy
 
-A new Flutter project.
+## Instalacja
 
-## Getting Started
+Aplikacja została zaimplementowana zbudowana z użyciem wieloplatformowego frameworka Flutter.
 
-This project is a starting point for a Flutter application.
+W celu zapoznania się z tym narzędziem zachęcam do przejżenia jego dokumentacji: [dokumentacja fluttera](https://docs.flutter.dev/)
 
-A few resources to get you started if this is your first Flutter project:
+W celu zbudowania aplikacji wymagane jest zainstalowanie tego narzędzia w systemie. Instrukcję instalacji można znaleść na stronie [instrukcja instalacji](https://docs.flutter.dev/install). Aplikacja docelowo ma działać w systemie Android, dlatego oprócz samego SDK Fluttera trzeba również zainstalować Android Studio wraz z SDK Androida. W instrukcji instalacji Fluttera należy wykonać również kroki w sekcji instalacji Fluttera pod Android.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Konfigurowanie połączenia z usługą asystenta
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Aplikacja do działania wymaga połączenia z serwerem na którym znajduje się backend logiczny asystenta medycznego. Komunikacja odbywa się poprzez websocket.
+
+W pliku .env znajdują się zmienne środowiskowe aplikacji. URL serwera zapisane jest w zmiennej `WS_URL`.
+
+## Budowanie aplikacji
+
+Przed uruchomieniem aplikacji musimy będąc w głównym katalogu projektu wykonać komendę: `flutter pub get`
+
+## Uruchamianie aplikacji
+
+Przed uruchomieniem do portu USB komputera należy podłączyć poprzez kabel USB telefon z systemem Android. W ustawieniach programisty w telefonie konieczne jest włączenie Debugowania USB.
+
+Komendą `flutter devices` można sprawdzić dostępne urządzenia docelowe dla Fluttera, powinna tam być widoczna nazwa telefonu z dopiskiem "(mobile)".
+
+Mając podłączone urządzenie możemy uruchomić aplikację komendą: `flutter -v -d nazwa_urządzenia run`
