@@ -2,7 +2,7 @@
 
 ## Instalacja
 
-Aplikacja została zaimplementowana zbudowana z użyciem wieloplatformowego frameworka Flutter.
+Aplikacja została zaimplementowana z użyciem wieloplatformowego frameworka Flutter.
 
 W celu zapoznania się z tym narzędziem zachęcam do przejżenia jego dokumentacji: [dokumentacja fluttera](https://docs.flutter.dev/)
 
@@ -16,7 +16,7 @@ W pliku .env znajdują się zmienne środowiskowe aplikacji. URL serwera zapisan
 
 ## Budowanie aplikacji
 
-Przed uruchomieniem aplikacji musimy będąc w głównym katalogu projektu wykonać komendę: `flutter pub get`
+Przed uruchomieniem aplikacji będąc w głównym katalogu projektu należy wykonać komendę: `flutter pub get`.
 
 ## Uruchamianie aplikacji
 
