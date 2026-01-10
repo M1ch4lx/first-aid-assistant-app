@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Potrzebne do rootBundle
 import 'procedure_detail_screen.dart';
 import 'models/procedure.dart';
 
@@ -10,85 +12,31 @@ class CatalogTab extends StatefulWidget {
 }
 
 class _CatalogTabState extends State<CatalogTab> {
-  final List<Procedure> _allProcedures = [
-    Procedure(
-      title: 'RKO u Dorosłych',
-      description: 'Resuscytacja krążeniowo-oddechowa (30 uciśnięć : 2 oddechy).',
-      icon: Icons.favorite,
-      color: Colors.red,
-      warnings: ['Upewnij się, że miejsce jest bezpieczne.', 'Zadzwoń pod 112/999.'],
-      steps: [
-        'Sprawdź przytomność (potrząśnij za ramiona).',
-        'Udrożnij drogi oddechowe (odchyl głowę do tyłu).',
-        'Sprawdź oddech (patrz, słuchaj, wyczuwaj przez 10 sek).',
-        'Jeśli nie oddycha, wykonaj 30 mocnych uciśnięć klatki piersiowej.',
-        'Wykonaj 2 oddechy ratownicze (jeśli potrafisz).',
-        'Kontynuuj do przyjazdu pogotowia lub użycia AED.'
-      ],
-    ),
-    Procedure(
-      title: 'Zadławienie',
-      description: 'Pomoc przy nagłej niedrożności dróg oddechowych.',
-      icon: Icons.air,
-      color: Colors.blue,
-      warnings: ['Nie uderzaj w plecy, gdy osoba kaszle efektywnie.', 'Rękoczyn Heimlicha tylko u przytomnych.'],
-      steps: [
-        'Zachęcaj do kaszlu.',
-        'Wykonaj 5 mocnych uderzeń w okolicę międzyłopatkową.',
-        'Jeśli nie pomogło, wykonaj 5 uciśnięć nadbrzusza (Rękoczyn Heimlicha).',
-        'Powtarzaj cykl 5:5 do skutku.',
-        'Jeśli straci przytomność, zacznij RKO.'
-      ],
-    ),
-    Procedure(
-      title: 'Krwotok Zewnętrzny',
-      description: 'Tamowanie silnych krwawień i amputacji.',
-      icon: Icons.bloodtype,
-      color: Colors.red.shade900,
-      warnings: ['Zawsze zakładaj rękawiczki.', 'Nie usuwaj ciał obcych z rany.'],
-      steps: [
-        'Zastosuj bezpośredni ucisk palcami lub dłonią (przez gazę).',
-        'Załóż opatrunek uciskowy (kilka warstw gazy i bandaż).',
-        'Jeśli przesiąka, nie zdejmuj – dołóż kolejną warstwę.',
-        'Unieś kończynę powyżej poziomu serca.',
-        'W skrajnych przypadkach (amputacja) użyj stazy taktycznej.'
-      ],
-    ),
-    Procedure(
-      title: 'Udar Mózgu (FAST)',
-      description: 'Rozpoznawanie objawów udaru i szybka reakcja.',
-      icon: Icons.psychology,
-      color: Colors.purple,
-      warnings: ['Liczy się każda minuta (czas to mózg).', 'Nie podawaj nic do picia ani jedzenia.'],
-      steps: [
-        'F (Face) - Poproś o uśmiech (sprawdź czy opada kącik ust).',
-        'A (Arms) - Poproś o podniesienie obu rąk (sprawdź czy jedna opada).',
-        'S (Speech) - Poproś o powtórzenie prostego zdania (sprawdź czy mowa jest bełkotliwa).',
-        'T (Time) - Jeśli widzisz któryś z objawów, natychmiast dzwoń pod 112.'
-      ],
-    ),
-    Procedure(
-      title: 'Pozycja Bezpieczna',
-      description: 'Dla osób nieprzytomnych, ale oddychających.',
-      icon: Icons.person_pin,
-      color: Colors.green,
-      warnings: ['Nie stosuj przy podejrzeniu urazu kręgosłupa (chyba że konieczne).', 'Monitoruj oddech co minutę.'],
-      steps: [
-        'Ułóż rękę bliższą Tobie pod kątem prostym do ciała.',
-        'Drugą rękę włóż pod policzek poszkodowanego.',
-        'Zegnij dalszą nogę w kolanie i pociągnij za nią, obracając osobę na bok.',
-        'Odchyl lekko głowę do tyłu (drożność).',
-      ],
-    ),
-  ];
-
+  List<Procedure> _allProcedures = [];
   List<Procedure> _filteredProcedures = [];
   final TextEditingController _searchController = TextEditingController();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _filteredProcedures = _allProcedures;
+    _loadProcedures();
+  }
+
+  Future<void> _loadProcedures() async {
+    try {
+      final String response = await rootBundle.loadString('assets/data/procedures.json');
+      final List<dynamic> data = json.decode(response);
+      
+      setState(() {
+        _allProcedures = data.map((json) => Procedure.fromJson(json)).toList();
+        _filteredProcedures = _allProcedures;
+        _isLoading = false;
+      });
+    } catch (e) {
+      debugPrint("Błąd ładowania procedur: $e");
+      setState(() => _isLoading = false);
+    }
   }
 
   void _filterProcedures(String query) {
@@ -104,50 +52,54 @@ class _CatalogTabState extends State<CatalogTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 40, 20, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Katalog Pierwszej Pomocy', 
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
-                  const SizedBox(height: 20),
-                  
-                  TextField(
-                    controller: _searchController,
-                    onChanged: _filterProcedures,
-                    decoration: InputDecoration(
-                      hintText: 'Szukaj procedury...',
-                      prefixIcon: const Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.grey.shade200)),
-                    ),
+      body: _isLoading 
+        ? const Center(child: CircularProgressIndicator())
+        : CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 40, 20, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Katalog Pierwszej Pomocy', 
+                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                      const SizedBox(height: 20),
+                      
+                      TextField(
+                        controller: _searchController,
+                        onChanged: _filterProcedures,
+                        decoration: InputDecoration(
+                          hintText: 'Szukaj procedury...',
+                          prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.grey.shade200)),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                ],
+                ),
               ),
-            ),
-          ),
 
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final proc = _filteredProcedures[index];
-                  return _buildProcedureCard(context, procedure: proc);
-                },
-                childCount: _filteredProcedures.length,
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: _filteredProcedures.isEmpty 
+                  ? const SliverToBoxAdapter(child: Center(child: Text("Brak wyników")))
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final proc = _filteredProcedures[index];
+                          return _buildProcedureCard(context, procedure: proc);
+                        },
+                        childCount: _filteredProcedures.length,
+                      ),
+                    ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
     );
   }
 

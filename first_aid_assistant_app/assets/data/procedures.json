@@ -1,0 +1,86 @@
+[
+  {
+    "title": "RKO u Dorosłych",
+    "description": "Resuscytacja krążeniowo-oddechowa (30 uciśnięć : 2 oddechy).",
+    "icon": "favorite",
+    "color": "red",
+    "warnings": [
+      "Upewnij się, że miejsce jest bezpieczne.",
+      "Zadzwoń pod 112/999."
+    ],
+    "steps": [
+      "Sprawdź przytomność (potrząśnij za ramiona).",
+      "Udrożnij drogi oddechowe (odchyl głowę do tyłu).",
+      "Sprawdź oddech (patrz, słuchaj, wyczuwaj przez 10 sek).",
+      "Jeśli nie oddycha, wykonaj 30 mocnych uciśnięć klatki piersiowej.",
+      "Wykonaj 2 oddechy ratownicze.",
+      "Kontynuuj do przyjazdu pogotowia lub odzyskania przytomności."
+    ]
+  },
+  {
+    "title": "Zadławienie",
+    "description": "Pomoc przy nagłej niedrożności dróg oddechowych.",
+    "icon": "air",
+    "color": "blue",
+    "warnings": [
+      "Nie uderzaj w plecy, gdy osoba kaszle efektywnie.",
+      "Rękoczyn Heimlicha tylko u przytomnych."
+    ],
+    "steps": [
+      "Zachęcaj do kaszlu.",
+      "Wykonaj 5 mocnych uderzeń w okolicę międzyłopatkową.",
+      "Jeśli nie pomogło, wykonaj 5 uciśnięć nadbrzusza (Rękoczyn Heimlicha).",
+      "Powtarzaj cykl 5:5 do skutku.",
+      "Jeśli straci przytomność, zacznij RKO."
+    ]
+  },
+  {
+    "title": "Krwotok Zewnętrzny",
+    "description": "Tamowanie silnych krwawień i amputacji.",
+    "icon": "bloodtype",
+    "color": "redShade900",
+    "warnings": [
+      "Zawsze zakładaj rękawiczki.",
+      "Nie usuwaj ciał obcych z rany."
+    ],
+    "steps": [
+      "Zastosuj bezpośredni ucisk palcami lub dłonią (przez gazę).",
+      "Załóż opatrunek uciskowy (kilka warstw gazy i bandaż).",
+      "Jeśli przesiąka, nie zdejmuj – dołóż kolejną warstwę.",
+      "Unieś kończynę powyżej poziomu serca.",
+      "W skrajnych przypadkach (amputacja) użyj stazy taktycznej."
+    ]
+  },
+  {
+    "title": "Udar Mózgu (FAST)",
+    "description": "Rozpoznawanie objawów udaru i szybka reakcja.",
+    "icon": "psychology",
+    "color": "purple",
+    "warnings": [
+      "Liczy się każda minuta (czas to mózg).",
+      "Nie podawaj nic do picia ani jedzenia."
+    ],
+    "steps": [
+      "F (Face) - Poproś o uśmiech (sprawdź czy opada kącik ust).",
+      "A (Arms) - Poproś o podniesienie obu rąk (sprawdź czy jedna opada).",
+      "S (Speech) - Poproś o powtórzenie prostego zdania (sprawdź czy mowa jest bełkotliwa).",
+      "T (Time) - Jeśli widzisz któryś z objawów, natychmiast dzwoń pod 112."
+    ]
+  },
+  {
+    "title": "Pozycja Bezpieczna",
+    "description": "Dla osób nieprzytomnych, ale oddychających.",
+    "icon": "person_pin",
+    "color": "green",
+    "warnings": [
+      "Nie stosuj przy podejrzeniu urazu kręgosłupa (chyba że konieczne).",
+      "Monitoruj oddech co minutę."
+    ],
+    "steps": [
+      "Ułóż rękę bliższą Tobie pod kątem prostym do ciała.",
+      "Drugą rękę włóż pod policzek poszkodowanego.",
+      "Zegnij dalszą nogę w kolanie i pociągnij za nią, obracając osobę na bok.",
+      "Odchyl lekko głowę do tyłu."
+    ]
+  }
+]
