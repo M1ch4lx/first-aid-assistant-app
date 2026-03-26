@@ -1,27 +1,27 @@
-# Aplikacja asystenta pierwszej pomocy
+# First Aid Assistant Application
 
-## Wymagania
+## Requirements
 
-Aplikacja została zaimplementowana z użyciem wieloplatformowego frameworka Flutter.
+The application has been implemented using the cross-platform Flutter framework.
 
-W celu zapoznania się z tym narzędziem zachęcam do przejżenia jego dokumentacji: [dokumentacja fluttera](https://docs.flutter.dev/)
+To get familiar with this tool, I encourage you to review its documentation: [Flutter documentation](https://docs.flutter.dev/)
 
-W celu zbudowania aplikacji wymagane jest zainstalowanie tego narzędzia w systemie. Instrukcję instalacji można znaleść na stronie [instrukcja instalacji](https://docs.flutter.dev/install). Aplikacja docelowo ma działać w systemie Android, dlatego oprócz samego SDK Fluttera trzeba również zainstalować Android Studio wraz z SDK Androida. W instrukcji instalacji Fluttera należy wykonać również kroki w sekcji instalacji Fluttera pod Android.
+To build the application, this tool must be installed on your system. Installation instructions can be found here: [installation guide](https://docs.flutter.dev/install). The application is intended to run on Android, so in addition to the Flutter SDK, you also need to install Android Studio along with the Android SDK. In the Flutter installation guide, you should also follow the steps in the section for installing Flutter on Android.
 
-## Konfigurowanie połączenia z usługą asystenta
+## Configuring the Connection to the Assistant Service
 
-Aplikacja do działania wymaga połączenia z serwerem na którym znajduje się backend logiczny asystenta medycznego. Komunikacja odbywa się poprzez websocket.
+The application requires a connection to the server where the backend logic of the medical assistant is hosted. Communication is performed via WebSocket.
 
-W pliku .env znajdują się zmienne środowiskowe aplikacji. URL serwera zapisane jest w zmiennej `WS_URL`.
+In the .env file, the application’s environment variables are stored. The server URL is saved in the variable WS_URL.
 
-## Budowanie aplikacji
+## Building the Application
 
-Przed uruchomieniem aplikacji będąc w głównym katalogu projektu należy wykonać komendę: `flutter pub get`.
+Before running the application, while in the root directory of the project, run the command flutter pub get.
 
-## Uruchamianie aplikacji
+## Running the Application
 
-Przed uruchomieniem do portu USB komputera należy podłączyć poprzez kabel USB telefon z systemem Android. W ustawieniach programisty w telefonie konieczne jest włączenie Debugowania USB.
+Before running, connect an Android phone to your computer via a USB cable. In the developer settings on the phone, USB Debugging must be enabled.
 
-Komendą `flutter devices` można sprawdzić dostępne urządzenia docelowe dla Fluttera, powinna tam być widoczna nazwa telefonu z dopiskiem "(mobile)".
+You can check the available target devices for Flutter using the command flutter devices. The phone should be visible in the list with "(mobile)" next to its name.
 
-Mając podłączone urządzenie możemy uruchomić aplikację komendą: `flutter -v -d nazwa_urządzenia run`
+With the device connected, you can run the application using the command flutter -v -d device_name run.
